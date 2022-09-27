@@ -6,7 +6,7 @@ namespace Proj_OnTheFly_BD
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
     }
 }
