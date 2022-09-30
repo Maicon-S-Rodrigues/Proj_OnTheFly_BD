@@ -43,25 +43,18 @@ namespace Proj_OnTheFly_BD
                 string strDataNascimento;
                 try
                 {
-                    Console.WriteLine("nome");
-                    this.Nome = Console.ReadLine();
-                    //this.Nome = utility.ValidarEntrada("nome");
+                    this.Nome = utility.ValidarEntrada("nome");
                     if (this.Nome == null) return;
 
-                    Console.WriteLine("cpf");
                     this.Cpf = utility.ValidarEntrada("cpf");
                     if (this.Cpf == null) return;
 
-                    Console.WriteLine("datanasc");
-                    strDataNascimento = Console.ReadLine();
-                    //strDataNascimento = ValidarEntrada("datanascimento");
+                    strDataNascimento = utility.ValidarEntrada("datanascimento");
                     if (strDataNascimento == null) return;
 
                     this.DataNascimento = DateTime.Parse(strDataNascimento);
 
-                    Console.WriteLine("sex");
-                    this.Sexo = char.Parse(Console.ReadLine());
-                    //this.Sexo = char.Parse(ValidarEntrada("sexo"));
+                    this.Sexo = char.Parse(utility.ValidarEntrada("sexo"));
                     if (this.Sexo.Equals(null)) return;
 
                     this.DataCadastro = System.DateTime.Now;
@@ -100,31 +93,12 @@ namespace Proj_OnTheFly_BD
             {
                 try
                 {
-                    string sql;
-                    bool acesso = false;
                     Console.Clear();
 
-                    Console.WriteLine("CPF LOGIN");
-                    this.Cpf = Console.ReadLine();
-
-                    if (connection.SqlVerificarDados(this.Cpf, "CPF", "Passageiro"))
-                    {
-                        Console.WriteLine("Cpf já Cadastrado");
-                        Console.ReadKey();
-                        return;
-                    }
-
-                    //this.Cpf = ValidarEntrada("cpfexiste");
+                    this.Cpf = utility.ValidarEntrada("cpfexiste");
                     if (this.Cpf == null) { return; }
 
-                    sql = $"SELECT (CPF) from Passageiro Where CPF = '{this.Cpf}';";
-
-                    acesso = connection.SqlLoginPassageiro(sql);
-
-                    if (acesso == true)
-                    {
                         Editar(this.Cpf);                  
-                    }
                 }
                 catch (Exception e)
                 {
@@ -135,31 +109,19 @@ namespace Proj_OnTheFly_BD
 
             } while (true);
         }
-        public void Editar(string cpfAtivo)
+        public void Editar(string cpfAtivo) // ok
         {
-            ConnectBD connect = new ConnectBD();
-
-
             do
             {
                 int opc;
-                string nome = "";
                 string sqlUpdate = "";
-                string sql = $"SELECT (Nome) from Passageiro Where CPF = '{cpfAtivo}';";
+                string sql = $"SELECT CPF, Nome, Data_Nascimento, Sexo, Situacao, Data_Cadastro, Data_Ultima_Compra from Passageiro Where CPF = '{cpfAtivo}';";
+
                 Console.Clear();
-
-                SqlCommand cmd = new SqlCommand(sql);
-
-                SqlDataReader reader = null;
-
-                using (reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        nome = reader.GetString(0);
-                    }
-                }
-                Console.WriteLine("\nEDTAR DADOS DE: " + nome + ", CPF: " + cpfAtivo);
+                Console.WriteLine("\nEDTAR DADOS DE CADASTRO");
+                Console.WriteLine("______________________________________________________");
+                connection.SqlMostrarUmPassageiroAtivo(sql);
+                Console.WriteLine("______________________________________________________");
                 Console.WriteLine("\nEscolha qual Dado deseja Editar: ");
                 Console.Write("\n 1 - Nome");
                 Console.Write("\n 2 - Data de Nascimento");
@@ -168,8 +130,7 @@ namespace Proj_OnTheFly_BD
                 Console.Write("\n\n 0 - Sair");
                 try
                 {
-                    opc = int.Parse(Console.ReadLine());
-                    //opc = int.Parse(utility.ValidarEntrada("menu"));
+                    opc = int.Parse(utility.ValidarEntrada("menu"));
 
                     switch (opc)
                     {
@@ -177,85 +138,62 @@ namespace Proj_OnTheFly_BD
                             return;
 
 
-                        case 1:
-                            string novoNome;
-                            Console.Clear();
-                            Console.WriteLine("\nNome Atual: " + nome);
+                        case 1: // nome
                             Console.Write("\n\nInforme o Novo Nome");
                             utility.Pausa();
-                            novoNome = Console.ReadLine();
-                            //novoNome = utility.ValidarEntrada("nome");
-                            if (novoNome == null) { return; }
+                            string novoNome = utility.ValidarEntrada("nome");
+                            if (novoNome == null) return; 
+                           
+                            sqlUpdate = $"UPDATE Passageiro SET Nome = '{novoNome}' WHERE CPF = '{cpfAtivo}';";
 
-                            Console.Clear();
-                            sqlUpdate = $"UPDATE Passageiro SET Nome = '{novoNome}';";
-
-                            connect.SqlUpdate(sqlUpdate);
+                            connection.SqlUpdate(sqlUpdate);
 
                             Console.WriteLine("\nNome Alterado com Sucesso!");
                             utility.Pausa();
-                            Editar(cpfAtivo);
-
                             break;
 
-                        //case 2:
+                        case 2: // data nascimento
+                            Console.Write("\nInforme a Nova Data de Nascimento");
+                            utility.Pausa();
+                            string novaDataNascimento = utility.ValidarEntrada("datanascimento");
+                            if (novaDataNascimento == null) return;
 
-                        //    Console.Clear();
-                        //    Console.WriteLine("\nData de nascimento Atual: " + passageiroAtivo.DataNascimento.ToShortDateString());
-                        //    Console.Write("\n\nInforme a Nova Data de Nascimento");
-                        //    Pausa();
-                        //    novaDataNascimento = ValidarEntrada("datanascimento");
-                        //    if (novaDataNascimento == null) TelaEditarPassageiro(passageiroAtivo);
+                            sqlUpdate = $"UPDATE Passageiro SET Data_Nascimento = '{novaDataNascimento}' WHERE CPF = '{cpfAtivo}';";
 
-                        //    data = DateConverter(novaDataNascimento);
-                        //    passageiroAtivo.DataNascimento = data;
-                        //    GravarPassageiro();
-                        //    Console.Clear();
-                        //    Console.WriteLine("\nData de Nascimento Alterada com Sucesso!");
-                        //    Pausa();
-                        //    TelaEditarPassageiro(passageiroAtivo);
+                            connection.SqlUpdate(sqlUpdate);
 
-                        //    break;
+                            Console.WriteLine("\nData de Nascimento Alterada com Sucesso!");
+                            utility.Pausa();
+                            break;
 
-                        //case 3:
-                        //    Console.Clear();
-                        //    Console.WriteLine("\nSexo Atual: " + passageiroAtivo.Sexo);
-                        //    Console.Write("\n\nInforme o Novo Sexo");
-                        //    Pausa();
-                        //    novoSexo = char.Parse(ValidarEntrada("sexo"));
-                        //    if (novoSexo.Equals(null)) TelaInicialPassageiros();
+                        case 3: // sexo
+                            Console.Write("\nInforme o Novo Sexo");
+                            utility.Pausa();
+                            char novoSexo = char.Parse(utility.ValidarEntrada("sexo"));
+                            if (novoSexo.Equals(null)) return;
 
-                        //    passageiroAtivo.Sexo = novoSexo;
-                        //    GravarPassageiro();
-                        //    Console.Clear();
-                        //    Console.WriteLine("\nSexo Alterado com Sucesso!");
-                        //    Pausa();
-                        //    TelaEditarPassageiro(passageiroAtivo);
-                        //    break;
+                            sqlUpdate = $"UPDATE Passageiro SET Sexo = '{novoSexo}' WHERE CPF = '{cpfAtivo}';";
+
+                            connection.SqlUpdate(sqlUpdate);
+
+                            Console.WriteLine("\nSexo Alterado com Sucesso!");
+                            utility.Pausa();
+                            break;
 
 
-                        //case 4:
+                        case 4: // situacao
+                            Console.Write("\nInforme a Nova Situação para o Cadastro");
+                            utility.Pausa();
+                            string novaSituacao = utility.ValidarEntrada("situacao");
+                            if (novaSituacao.Equals(null)) return;
 
-                        //    Console.Clear();
-                        //    Console.WriteLine("\nPASSAGEIRO: " + passageiroAtivo.Nome);
-                        //    if (passageiroAtivo.Situacao == 'A')
-                        //    { Console.WriteLine("\nSituação Atual: ATIVO"); }
+                            sqlUpdate = $"UPDATE Passageiro SET Situacao = '{novaSituacao}' WHERE CPF = '{cpfAtivo}';";
 
-                        //    if (passageiroAtivo.Situacao == 'I')
-                        //    { Console.WriteLine("\nSituação Atual: INATIVO"); }
+                            connection.SqlUpdate(sqlUpdate);
 
-                        //    Pausa();
-
-                        //    novaSituacao = char.Parse(ValidarEntrada("situacao"));
-                        //    if (novaSituacao.Equals(null)) TelaInicialPassageiros();
-
-                        //    passageiroAtivo.Situacao = novaSituacao;
-                        //    GravarPassageiro();
-                        //    Console.Clear();
-                        //    Console.WriteLine("\nSituação de Cadastro Alterada com Sucesso!");
-                        //    Pausa();
-                        //    TelaEditarPassageiro(passageiroAtivo);
-                        //    break;
+                            Console.WriteLine("\nSituação de Cadastro Alterada com Sucesso!");
+                            utility.Pausa();
+                            break;
                     }
                 }
                 catch (Exception e)
@@ -267,7 +205,6 @@ namespace Proj_OnTheFly_BD
 
             } while (true);
         }
-
 
     }
 }

@@ -27,7 +27,7 @@ namespace Proj_OnTheFly_BD
 
                 try
                 {
-                    opc = int.Parse(Console.ReadLine());
+                    opc = int.Parse(utility.ValidarEntrada("menu"));
 
                     switch (opc)
                     {
@@ -100,8 +100,7 @@ namespace Proj_OnTheFly_BD
                 Console.WriteLine("\n 0 - SAIR\n");
                 try
                 {
-                    opc = int.Parse(Console.ReadLine());
-                    //opc = int.Parse(ValidarEntrada("menu"));
+                    opc = int.Parse(utility.ValidarEntrada("menu"));
                     Console.Clear();
 
                     switch (opc)

@@ -1040,14 +1040,14 @@ namespace Proj_OnTheFly_BD
                         if (op.Key == ConsoleKey.A)
                         {
                             Console.Clear();
-                            return "A";
+                            return "ATIVO";
                         }
                         else
                         {
                             if (op.Key == ConsoleKey.I)
                             {
                                 Console.Clear();
-                                return "I";
+                                return "INATIVO";
                             }
                             else
                             {

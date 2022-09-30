@@ -89,11 +89,8 @@ namespace Proj_OnTheFly_BD
             }
             return acesso;
         }
-        public String SqlPesquisarExistente(String sql)
+        public void SqlMostrarUmPassageiroAtivo(String sql)
         {
-
-            String recebe = "";
-
             try
             {
                 connection.Open();
@@ -106,44 +103,29 @@ namespace Proj_OnTheFly_BD
                 {
                     while (reader.Read())
                     {
-                        recebe = reader.GetString(0);
+                        /*cpf*/
+                        Console.WriteLine(" CPF: {0}", reader.GetString(0));
+                        /*nome*/
+                        Console.WriteLine(" Nome: {0}", reader.GetString(1));
+                        /*data_nasc*/
+                        Console.WriteLine(" Data de Nascimento: {0}", reader.GetDateTime(2).ToShortDateString());
+                        /*sexo*/
+                        Console.WriteLine(" Sexo: {0}", reader.GetString(3));
+                        /*situacao*/
+                        Console.WriteLine(" Situação: {0}", reader.GetString(4));
+                        /*data_cadastro*/
+                        Console.WriteLine(" Cadastrado des de {0}", reader.GetDateTime(5).ToShortDateString());
+                        /*data_ultima_compra*/
+                        Console.WriteLine(" Última compra feita em {0}", reader.GetDateTime(6));
                     }
                 }
-                if (recebe.Equals(null) || recebe.Equals(""))
-                {
-                    Console.WriteLine("\n\t*** Passageiro Não Localizado ****\n");
-                }
-                else
-                {
-                    Console.WriteLine("\n\t*** Passageiro Localizado ****\n");
-                    using (reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            /*cpf*/
-                            Console.Write(" {0}", reader.GetString(0));
-                            /*nome*/
-                            Console.Write(" {0}", reader.GetString(1));
-                            /*data_nasc*/
-                            Console.Write(" {0}", reader.GetDateTime(2).ToShortDateString());
-                            /*sexo*/
-                            Console.Write(" {0}", reader.GetString(3));
-                            /*situacao*/
-                            Console.Write(" {0}", reader.GetString(4));
-                            /*data_cadastro*/
-                            Console.Write(" {0}", reader.GetDateTime(5));
-                            /*data_ultima_compra*/
-                            Console.Write(" {0}", reader.GetDateTime(6));
-                        }
-                    }
-                }
+
                 connection.Close();
             }
             catch (SqlException ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return recebe;
         }
 
         public bool SqlVerificarDados(string dado, string campo, string tabela)
