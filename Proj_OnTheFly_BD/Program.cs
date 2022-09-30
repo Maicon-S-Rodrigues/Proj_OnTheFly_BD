@@ -5,8 +5,9 @@ namespace Proj_OnTheFly_BD
 {
     internal class Program
     {
+        static Utility utility = new Utility();
         #region TELAS
-        static void TelaInicial(SqlConnection connection)
+        static void TelaInicial()
         {
             int opc = 0;
             do
@@ -21,8 +22,8 @@ namespace Proj_OnTheFly_BD
                 Console.WriteLine(" 5 - Acesso a Lista de CNPJ Restritos\n");
                 Console.WriteLine(" 6 - Aeronaves\n");
                 Console.WriteLine(" 7 - Voos Realizados\n");
-                Console.WriteLine(" 8 - Voos Disponíveis");
-                Console.WriteLine("\n 0 - Encerrar Sessão\n");
+                Console.WriteLine(" 8 - Voos Disponíveis\n");
+                Console.WriteLine(" 0 - Encerrar Sessão\n");
 
                 try
                 {
@@ -31,33 +32,32 @@ namespace Proj_OnTheFly_BD
                     switch (opc)
                     {
                         case 0:
-                            connection.Close();
                             Console.WriteLine("Encerrando...");
                             Environment.Exit(0);
                             break;
 
                         case 1:
-                            TelaInicialCompanhiasAereas();
+                            //TelaInicialCompanhiasAereas();
                             break;
 
                         case 2:
-                            TelaInicialPassageiros();
+                            TelaInicialPassageiro();
                             break;
 
                         case 3:
-                            TelaVendas();
+                            //TelaVendas();
                             break;
 
                         case 4:
-                            TelaInicialCpfRestritos();
+                            //TelaInicialCpfRestritos();
                             break;
 
                         case 5:
-                            TelaInicialCnpjRestritos();
+                            //TelaInicialCnpjRestritos();
                             break;
 
                         case 6:
-                            TelaVerAeronavesCadastradas();
+                            //TelaVerAeronavesCadastradas();
                             break;
 
                         case 7:
@@ -83,138 +83,54 @@ namespace Proj_OnTheFly_BD
                 catch
                 {
                     Console.WriteLine("Escolha um valor numérico que represente a opção desejada!\n");
-                    Pausa();
+                    utility.Pausa();
                 }
             } while (opc != 0);
         }
-        static void TelaInicialPassageiros()
+        static void TelaInicialPassageiro()
         {
-
-        }
-        static void TelaLoginPassageiro()
-        {
-
-        }
-        static void TelaCadastrarPassageiro()
-        {
-
-        }
-        static void TelaEditarPassageiro(Passageiro passageiroAtivo)
-        {
-
-        }
-        static void TelaEditarCompanhiaAerea(CompanhiaAerea companhiaAerea)
-        {
-
-        }
-        static void TelaInicialCpfRestritos()
-        {
-
-        }
-        static void TelaInicialCnpjRestritos()
-        {
-
-        }
-        static void TelaInicialCompanhiasAereas()
-        {
-
-        }
-        static void TelaLoginCompanhiaAerea()
-        {
-
-        }
-        static void TelaCadastrarCompanhiaAerea()
-        {
-
-        }
-        static void TelaOpcoesCompanhiaAerea(CompanhiaAerea compAtivo)
-        {
-
-        }
-        static void TelaCadastrarAeronave(CompanhiaAerea compAtivo)
-        {
-
-        }
-        static void TelaCadastrarVoo(CompanhiaAerea compAtivo)
-        {
-
-        }
-        static void TelaVerAeronavesCadastradas()
-        {
-
-        }
-        static void TelaEditarAeronave(CompanhiaAerea compAtivo)
-        {
-
-        }
-        static void TelaVendas()
-        {
-
-        }
-        static void TelaVoosDisponiveis(Passageiro passageiroAtivo)
-        {
-
-        }
-        static void TelaDescricaoVoo(string idvoo, Passageiro passageiroAtivo)
-        {
-
-        }
-        static void TelaHistoricoVendas()
-        {
-
-        }
-        static void TelaDescricaoItemVenda()
-        {
-
-        }
-        static void TelaHistoricoReservadas()
-        {
-
-        }
-        #endregion
-
-        #region UTILITY
-        static void Pausa()
-        {
-            Console.WriteLine("\nAperte 'ENTER' para continuar...");
-            Console.ReadKey();
-            Console.Clear();
-        }
-        static bool PausaMensagem()
-        {
-            bool repetirdo;
+            Passageiro passageiro = new Passageiro();
+            int opc = 0;
             do
             {
-                Console.WriteLine("\nPressione S para informar novamente ou C para cancelar:");
-                ConsoleKeyInfo op = Console.ReadKey(true);
-                if (op.Key == ConsoleKey.S)
+                Console.Clear();
+                Console.WriteLine("\nInforme a Opção Desejada:\n");
+                Console.WriteLine(" 1 - Passageiro já cadastrado\n");
+                Console.WriteLine(" 2 - Cadastrar um novo Passageiro\n");
+                Console.WriteLine("\n 0 - SAIR\n");
+                try
                 {
+                    opc = int.Parse(Console.ReadLine());
+                    //opc = int.Parse(ValidarEntrada("menu"));
                     Console.Clear();
-                    return false;
+
+                    switch (opc)
+                    {
+                        case 0:
+                            TelaInicial();
+                            break;
+
+                        case 1:
+                            passageiro.LoginPassageiro();
+                            break;
+
+                        case 2:
+                            passageiro.Cadastro();
+                            break;
+                    }
                 }
-                else
+                catch
                 {
-                    if (op.Key == ConsoleKey.C)
-                    {
-                        Console.Clear();
-                        return true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Escolha uma opção válida!");
-                        repetirdo = true;
-                    }
+                    Console.WriteLine("Escolha um valor numérico que represente a opção desejada!\n");
+                    utility.Pausa();
                 }
-            } while (repetirdo == true);
-            return true;
+            } while (opc != 0);
         }
+
         #endregion
         static void Main(string[] args)
         {
-            ConnectBD conn = new ConnectBD();
-            SqlConnection connection = new SqlConnection(conn.Caminho());
-
-            TelaInicial(connection);
+            TelaInicial();
         }
     }
 }
