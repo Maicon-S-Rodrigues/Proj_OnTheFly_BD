@@ -32,7 +32,6 @@ namespace Proj_OnTheFly_BD
                 connection.Close();
             }
         }
-
         public void SqlUpdate(String sql) // ok
         {
             try
@@ -47,6 +46,37 @@ namespace Proj_OnTheFly_BD
             {
                 Console.WriteLine(ex.Message);
                 connection.Close();
+            }
+        }
+        public bool SqlVerificarDados(string dado, string campo, string tabela)
+        {
+            string sql = $"SELECT {campo} FROM {tabela} WHERE {campo} = '{dado}'";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        connection.Close();
+                        return true;
+                    }
+                    else
+                    {
+                        connection.Close();
+                        return false;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                return false;
             }
         }
 
@@ -89,6 +119,34 @@ namespace Proj_OnTheFly_BD
             }
             return acesso;
         }
+        public DateTime SqlPegarDataNascimento(string cpf) // para calcular idadade passageiro e proibir venda para -18
+        {
+            string sql = "select Data_Nascimento from Passageiro where CPF = '" + cpf + "' and Situacao = 'ATIVO';";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+                DateTime datanascimento = System.DateTime.Now;
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        datanascimento = reader.GetDateTime(0);
+                        connection.Close();
+                        return datanascimento;
+                    }
+                }
+                return datanascimento;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                throw;
+            }
+        }
         public void SqlMostrarUmPassageiroAtivo(String sql) // ok 
         {
             try
@@ -127,7 +185,8 @@ namespace Proj_OnTheFly_BD
                 Console.WriteLine(ex.Message);
             }
         }
-        public void SqlMostrarUmaCompanhiaAtiva(String sql)
+
+        public void SqlMostrarUmaCompanhiaAtiva(String sql) // ok 
         {
             try
             {
@@ -164,66 +223,9 @@ namespace Proj_OnTheFly_BD
             }
         }
 
-        public bool SqlVerificarDados(string dado, string campo, string tabela)
-        {
-            string sql = $"SELECT {campo} FROM {tabela} WHERE {campo} = '{dado}'";
-            try
-            {
-                SqlCommand cmd = new SqlCommand(sql, connection);
-                connection.Open();
+        
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        connection.Close();
-                        return true;
-                    }
-                    else
-                    {
-                        connection.Close();
-                        return false;
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-                connection.Close();
-                Utility utility = new Utility();
-                utility.Pausa();
-                return false;
-            }
-        }
-
-        public DateTime SqlPegarDataNascimento(string cpf) // para calcular idadade passageiro e proibir venda para -18
-        {
-            string sql = "select Data_Nascimento from Passageiro where CPF = '" + cpf + "' and Situacao = 'ATIVO';";
-            try
-            {
-                SqlCommand cmd = new SqlCommand(sql, connection);
-                connection.Open();
-                DateTime datanascimento = System.DateTime.Now;
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        datanascimento = reader.GetDateTime(0);
-                        connection.Close();
-                        return datanascimento;
-                    }
-                }
-                return datanascimento;
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-                connection.Close();
-                Utility utility = new Utility();
-                utility.Pausa();
-                throw;
-            }
-        }
+        
 
     }
 }
