@@ -35,7 +35,7 @@ namespace Proj_OnTheFly_BD
             this.Situacao = Situacao; // Ativo,Inativo
         }
 
-        public void Cadastro() // ok
+        public void CadastroPassageiro() // ok
         {
             Console.Clear();
             do
@@ -98,7 +98,7 @@ namespace Proj_OnTheFly_BD
                     this.Cpf = utility.ValidarEntrada("cpfexiste");
                     if (this.Cpf == null) { return; }
 
-                        Editar(this.Cpf);                  
+                        EditarPassageiro(this.Cpf);                  
                 }
                 catch (Exception e)
                 {
@@ -109,7 +109,7 @@ namespace Proj_OnTheFly_BD
 
             } while (true);
         }
-        public void Editar(string cpfAtivo) // ok
+        public void EditarPassageiro(string cpfAtivo) // ok
         {
             do
             {

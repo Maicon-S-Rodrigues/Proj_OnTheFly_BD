@@ -37,7 +37,7 @@ namespace Proj_OnTheFly_BD
                             break;
 
                         case 1:
-                            //TelaInicialCompanhiasAereas();
+                            TelaInicialCompanhiasAereas();
                             break;
 
                         case 2:
@@ -87,7 +87,7 @@ namespace Proj_OnTheFly_BD
                 }
             } while (opc != 0);
         }
-        static void TelaInicialPassageiro()
+        static void TelaInicialPassageiro() // ok 
         {
             Passageiro passageiro = new Passageiro();
             int opc = 0;
@@ -114,7 +114,7 @@ namespace Proj_OnTheFly_BD
                             break;
 
                         case 2:
-                            passageiro.Cadastro();
+                            passageiro.CadastroPassageiro();
                             break;
                     }
                 }
@@ -125,7 +125,44 @@ namespace Proj_OnTheFly_BD
                 }
             } while (opc != 0);
         }
+        static void TelaInicialCompanhiasAereas() // ok 
+        {
+            CompanhiaAerea companhia = new CompanhiaAerea();
+            int opc = 0;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("\nInforme a Opção Desejada:\n");
+                Console.WriteLine(" 1 - Companhia Aérea já cadastrado\n");
+                Console.WriteLine(" 2 - Cadastrar uma nova Companhia Aérea\n");
+                Console.WriteLine("\n 0 - SAIR\n");
+                try
+                {
+                    opc = int.Parse(utility.ValidarEntrada("menu"));
+                    Console.Clear();
 
+                    switch (opc)
+                    {
+                        case 0:
+                            TelaInicial();
+                            break;
+
+                        case 1:
+                            companhia.LoginCompanhia();
+                            break;
+
+                        case 2:
+                            companhia.CadastroCompanhia();
+                            break;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Escolha um valor numérico que represente a opção desejada!\n");
+                    utility.Pausa();
+                }
+            } while (opc != 0);
+        }
         #endregion
         static void Main(string[] args)
         {
