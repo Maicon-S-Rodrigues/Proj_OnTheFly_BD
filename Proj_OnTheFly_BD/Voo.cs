@@ -36,15 +36,17 @@ namespace Proj_OnTheFly_BD
         {
             Console.Clear();
             double valor;
+            int capacidadeAeronave;
+            List<string> passagens = new List<string>();
 
-            bool permissaoVoo = connection.SqlVerificarDados(cnpjAtivo, "Situacao = 'ATIVA' AND CNPJ ", "CompanhiaAerea"); // verifica se a companhia esta ativa
+            bool permissaoVoo = connection.SqlVerificaCompanhiaAtiva($"SELECT Situacao FROM CompanhiaAerea WHERE Situacao = 'ATIVO' AND CNPJ = '{cnpjAtivo}'"); // verifica se a companhia esta ativa
 
-            if (permissaoVoo == true)
+                if (permissaoVoo == true)
             {
                 Console.WriteLine("\nInforme a Inscrição da Aeronave que ira realizar esse Voo");
                 string inscricao = utility.ValidarEntrada("aeronave");
                 if (inscricao == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
-                bool aeronaveAtiva = connection.SqlVerificarDados(inscricao, "Situacao = 'ATIVA' AND INSCRICAO ", "Aeronave"); // verifica se a aeronave esta ativa
+                bool aeronaveAtiva = connection.SqlVerificarDados(inscricao, "Situacao = 'ATIVA' AND INSCRICAO ", "Aeronave"); // verifica se a aeronave esta ativa PRECISA CORRIGIR SINTAXE IGUAL ACIMA^^^^
                 
                 if (aeronaveAtiva == false)
                 {
@@ -52,6 +54,17 @@ namespace Proj_OnTheFly_BD
                     utility.Pausa();
                     comp.OpcoesCompanhiaAerea(cnpjAtivo);
                 }
+
+                bool pegouCapacidade = false;
+                do
+                {
+                    capacidadeAeronave = connection.SqlPegarACapacidaeDaAeronave(inscricao);
+                    if (capacidadeAeronave > 0)
+                    {
+                        pegouCapacidade = true;
+                    }
+                } while (pegouCapacidade == false);
+
 
                 this.Destino = utility.ValidarEntrada("destino");
                 if (this.Destino == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
@@ -64,32 +77,39 @@ namespace Proj_OnTheFly_BD
                 if (auxValor == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
                 valor = double.Parse(auxValor);
 
-                this.IDVoo = utility.GeradorId("idvoo");
-                if (this.IDVoo == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
-
-                Voo novoVoo = new Voo(idVoo, destino, idAeronave, dataVoo, System.DateTime.Now, 'A');
-                listVoo.Add(novoVoo);
-                GravarVoo();
-                Aeronave a = null;
-                foreach (var aeronave in listAeronaves)
+                bool gerouID = false;
+                do
                 {
-                    if (aeronave.Inscricao == idAeronave)
+                    this.IDVoo = utility.GeradorIdVoo();
+                    if (this.IDVoo != null)
                     {
-                        a = aeronave;
-                        break;
+                        gerouID = true;
                     }
-                }
-                //Gerador de passagens
-                List<string> idsPassagem = GeradorIdPassagens(a.Capacidade);
-                for (int i = 0; i < a.Capacidade; i++)
+
+                } while (gerouID == false);
+
+                this.DataCadastro = System.DateTime.Now;
+                DateTime dataUltimaOP = System.DateTime.Now;
+
+                passagens = utility.GeradorIdPassagens(capacidadeAeronave);
+
+
+                //Insere o Voo
+                string sqlTextVoo = $"INSERT INTO Voo (ID_VOO, INSCRICAO, IATA, Data_Cadastro, Data_Hora_Voo)" +
+                                     $"values('{this.IDVoo}', '{inscricao}', '{this.Destino}', '{this.DataCadastro}', '{this.DataVoo}');";
+                connection.SqlInsert(sqlTextVoo);
+
+                //Preenche as passagens
+                foreach (string pass in passagens)
                 {
-                    PassagemVoo passagem = new PassagemVoo(idsPassagem[i], idVoo, System.DateTime.Now, valor, 'L');
-                    listPassagem.Add(passagem);
-                    GravarPassagem();
+                    string sqlTextPassagens = $"INSERT INTO Passagem (ID_PASSAGEM, ID_VOO, Valor, Data_Cadastro, Data_Ultima_Operacao)" +
+                                     $"values('{pass}', '{this.IDVoo}', '{valor}', '{this.DataCadastro}', '{dataUltimaOP}');";
+                    connection.SqlInsert(sqlTextPassagens);
                 }
-                Console.WriteLine("\nCadastro Realizado com Sucesso!");
+
+                Console.WriteLine("\nNovo Voo Programado com Sucesso!");
                 utility.Pausa();
-                comp.OpcoesCompanhiaAerea(cnpjAtivo);
+                comp.OpcoesCompanhiaAerea(cnpjAtivo);        
             }
             else
             {

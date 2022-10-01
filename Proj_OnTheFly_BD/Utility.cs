@@ -81,12 +81,12 @@ namespace Proj_OnTheFly_BD
                 }
             } while (true);
         }
-        public string GeradorIdVoo(string idVoo)
+        public string GeradorIdVoo()
         {
             try
             {
                 bool ok = false;
-
+                string idVoo = "";
                 do
                 {
                     idVoo = "V" + new Random().Next(1000, 9999);
@@ -106,7 +106,7 @@ namespace Proj_OnTheFly_BD
             catch (Exception e)
             {
                 Console.Clear();
-                Console.WriteLine("Erro, não foi possível gerar Passagens!\n" + e.Message);
+                Console.WriteLine("Erro, não foi possível gerar um ID para o Voo!\n" + e.Message);
                 Pausa();
                 throw;
             }

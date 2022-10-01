@@ -79,6 +79,36 @@ namespace Proj_OnTheFly_BD
                 return false;
             }
         }
+        public bool SqlVerificaCompanhiaAtiva(string command)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand(command, connection);
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        connection.Close();
+                        return true;
+                    }
+                    else
+                    {
+                        connection.Close();
+                        return false;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                return false;
+            }
+        }
 
         public bool SqlLoginPassageiro(String sql) // pesquisa se o cpf existe, se existir retorna true
         {
@@ -220,6 +250,35 @@ namespace Proj_OnTheFly_BD
             catch (SqlException ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        public int SqlPegarACapacidaeDaAeronave(string inscricaoAeronave)
+        {
+            string sql = "SELECT Capacidade FROM Aeronave WHERE Inscricao = '" + inscricaoAeronave + "';";
+            try
+            {
+                int capacidade;
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        capacidade = reader.GetInt32(0);
+                        connection.Close();
+                        return capacidade;
+                    }
+                }
+                return 0;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                throw;
             }
         }
 
