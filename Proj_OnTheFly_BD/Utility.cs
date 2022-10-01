@@ -81,6 +81,36 @@ namespace Proj_OnTheFly_BD
                 }
             } while (true);
         }
+        public string GeradorIdVoo(string idVoo)
+        {
+            try
+            {
+                bool ok = false;
+
+                do
+                {
+                    idVoo = "V" + new Random().Next(1000, 9999);
+                    bool vooExiste = connect.SqlVerificarDados(idVoo, "ID_VOO", "Voo");
+
+                    if (vooExiste == false)
+                    {
+                        ok = true;
+                        return idVoo;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                } while (ok == false);
+            }
+            catch (Exception e)
+            {
+                Console.Clear();
+                Console.WriteLine("Erro, não foi possível gerar Passagens!\n" + e.Message);
+                Pausa();
+                throw;
+            }
+        }
 
         public string ValidarEntrada(string entrada)
         {
