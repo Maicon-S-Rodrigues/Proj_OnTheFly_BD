@@ -85,7 +85,7 @@ namespace Proj_OnTheFly_BD
                     if (inscricao == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
 
                     string novaSituacao = utility.ValidarEntrada("situacao");
-                    if (novaSituacao == null) return;
+                    if (novaSituacao == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
 
                     string sqlUpdate = $"UPDATE Aeronave SET Situacao = '{novaSituacao}' WHERE INSCRICAO = '{inscricao}';";
 

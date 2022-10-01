@@ -11,9 +11,9 @@ namespace Proj_OnTheFly_BD
     {
 
         static ConnectBD connect = new();
-        public Utility(){}
+        public Utility() { }
 
-        public  bool PausaMensagem()
+        public bool PausaMensagem()
         {
             bool repetirdo;
             do
@@ -42,11 +42,44 @@ namespace Proj_OnTheFly_BD
             return true;
         }
 
-        public  void Pausa()
+        public void Pausa()
         {
             Console.WriteLine("\nAperte 'ENTER' para continuar...");
             Console.ReadKey();
             Console.Clear();
+        }
+
+        public List<string> GeradorIdPassagens(int capacidade)
+        {
+            do
+            {
+                try
+                {
+                    List<string> passagens = new List<string>();
+
+                    string num = "";
+
+                    int i = 0;
+                    while (i < capacidade)
+                    {
+                        num = "PA" + new Random().Next(1000, 9999);
+
+                        if (!passagens.Contains(num))
+                        {
+                            passagens.Add(num);
+                            i++;
+                        }
+                    }
+                    return passagens;
+                }
+                catch (Exception e)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Erro, não foi possível gerar Passagens!\n" + e.Message);
+                    Pausa();
+                    throw;
+                }
+            } while (true);
         }
 
         public string ValidarEntrada(string entrada)
@@ -243,7 +276,7 @@ namespace Proj_OnTheFly_BD
 
                 #endregion;
 
-                    
+
                 case "cnpj": // ok
 
                     #region CNPJ;
@@ -1120,12 +1153,12 @@ namespace Proj_OnTheFly_BD
                             //String comando = "select Inscricao from Aeronave where Inscricao = '" + idaeronave + "';";
 
                             //encontrado = ConexaoBanco.InjetarSqlExecuteReader(comando);
-                            encontrado = connect.SqlVerificarDados(idaeronave, "Inscricao", "Aeronave1");
+                            encontrado = connect.SqlVerificarDados(idaeronave, "Inscricao", "Aeronave");
 
                             if (encontrado == true)
                             {
                                 //comando = "select Situacao from Aeronave where Inscricao = '" + idaeronave + "' and Situacao = 'Ativa';";
-                                encontrado = connect.SqlVerificarDados(idaeronave, "Situacao = 'ATIVA' AND INSCRICAO ", "Aeronave");
+                                encontrado = connect.SqlVerificarDados(idaeronave, "Situacao = 'ATIVO' AND INSCRICAO ", "Aeronave");
 
                                 if (encontrado == true)
                                 {
@@ -1257,7 +1290,7 @@ namespace Proj_OnTheFly_BD
                                 {
 
                                     DateTime datanascimento = connect.SqlPegarDataNascimento(cpf);
-                                 
+
                                     //Verifica se é maior de idade:
                                     if (DateTime.Compare(datanascimento, System.DateTime.Now.AddYears(-18)) <= 0)
                                     {
@@ -1520,7 +1553,7 @@ namespace Proj_OnTheFly_BD
                     return null;
                 #endregion
 
-                    
+
                 default:
                     return null;
             }

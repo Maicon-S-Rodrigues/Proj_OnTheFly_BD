@@ -163,10 +163,6 @@ namespace Proj_OnTheFly_BD
                 }
             } while (opc != 0);
         }
-        static void TelaInicialAeronaves()
-        {
-
-        }
         #endregion
         static void Main(string[] args)
         {
