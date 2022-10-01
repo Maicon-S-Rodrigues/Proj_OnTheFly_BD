@@ -39,7 +39,7 @@ namespace Proj_OnTheFly_BD
                     this.Cnpj = utility.ValidarEntrada("cnpjexiste");
                     if (this.Cnpj == null) { return; }
 
-                    EditarCompanhia(this.Cnpj);
+                    OpcoesCompanhiaAerea(this.Cnpj);
                 }
                 catch (Exception e)
                 {
@@ -47,6 +47,108 @@ namespace Proj_OnTheFly_BD
                     utility.Pausa();
                     throw;
                 }
+
+            } while (true);
+        }
+        public void OpcoesCompanhiaAerea(string cnpjAtivo) // FALTA O SWITCH CASE 3: CANCELAR UM VOO!!! 
+        {
+            Aeronave aeronave = new Aeronave();
+            Voo voo = new Voo();
+            
+            do
+            {
+                string sql = $"SELECT CNPJ, Razao_Social, Data_Abertura, Data_Cadastro, Ultimo_Voo, Situacao FROM CompanhiaAerea Where CNPJ = '{cnpjAtivo}';";
+                int opc = 0;
+
+                Console.Clear();
+                Console.WriteLine("______________________________________________________");
+                connection.SqlMostrarUmaCompanhiaAtiva(sql);
+                Console.WriteLine("______________________________________________________");
+                Console.WriteLine("\nPor Favor, informe a Opção Desejada:\n");
+                Console.WriteLine(" 1 - Cadastrar uma nova Aeronave\n");
+                Console.WriteLine(" 2 - Programar um novo Voo\n");
+                Console.WriteLine(" 3 - Cancelar um voo\n");
+                Console.WriteLine(" 4 - Ativar/Inativar Aeronave\n");
+                Console.WriteLine(" 5 - Editar dados da Companhia Aerea\n");
+
+                Console.WriteLine("\n 0 - Encerrar Sessão\n");
+                opc = int.Parse(utility.ValidarEntrada("menu"));
+                Console.Clear();
+
+                switch (opc)
+                {
+                    case 0:
+                        return;
+
+                    case 1:
+
+                        aeronave.CadastrarAeronave(cnpjAtivo);
+
+                        break;
+
+                    case 2:
+
+                       voo.CadastrarVoo(cnpjAtivo);
+
+                        break;
+
+
+                    case 3:
+                        //foreach (var Voo in listVoo)
+                        //{
+                        //    if (Voo.Situacao == 'A')
+                        //    {
+                        //        Console.WriteLine("IDVoo: " + Voo.IDVoo + " Destino: " + Voo.Destino + " Data e Hora do Voo: " + Voo.DataVoo.ToString("dd/MM/yyyy HH:mm"));
+                        //    }
+                        //}
+                        //Console.WriteLine("\n----------------------------------------------------------------------------------------------");
+                        //Console.WriteLine("\n1 - Escolher o Voo Desejado: ");
+                        //Console.WriteLine("0 - Voltar");
+                        //opc = int.Parse(ValidarEntrada("menu"));
+                        //Console.Clear();
+
+                        //switch (opc)
+                        //{
+                        //    case 0:
+                        //        OpcoesCompanhiaAerea(compAtivo);
+                        //        break;
+                        //    case 1:
+                        //        Console.Clear();
+                        //        string idvoo = ValidarEntrada("idvoo");
+                        //        if (idvoo == null) OpcoesCompanhiaAerea(compAtivo);
+
+                        //        foreach (var voo in listVoo)
+                        //        {
+                        //            if (voo.IDVoo == idvoo)
+                        //            {
+                        //                voo.Situacao = 'C';
+                        //                Console.WriteLine("Voo CANCELADO!.");
+                        //                utility.Pausa();
+                        //                OpcoesCompanhiaAerea(compAtivo);
+                        //            }
+
+                        //        }
+
+                        //        break;
+                        //}
+
+                        break;
+
+
+                    case 4:
+
+                        aeronave.EditarAeronave(cnpjAtivo);
+
+
+                        break;
+
+                    case 5:
+
+                        EditarCompanhia(cnpjAtivo);
+
+                        break;
+                }
+
 
             } while (true);
         }

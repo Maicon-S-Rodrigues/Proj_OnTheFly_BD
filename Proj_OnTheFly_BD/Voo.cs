@@ -8,5 +8,13 @@ namespace Proj_OnTheFly_BD
 {
     internal class Voo
     {
+
+
+
+
+        public void CadastrarVoo(string cnpjAtivo)
+        {
+
+        }
     }
 }

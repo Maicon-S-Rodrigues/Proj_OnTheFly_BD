@@ -8,5 +8,16 @@ namespace Proj_OnTheFly_BD
 {
     internal class Aeronave
     {
+
+
+
+        public void CadastrarAeronave(string cnpjAtivo)
+        {
+
+        }
+        public void EditarAeronave(string cnpjAtivo)
+        {
+
+        }
     }
 }

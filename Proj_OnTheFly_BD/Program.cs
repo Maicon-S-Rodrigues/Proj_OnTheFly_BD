@@ -163,10 +163,16 @@ namespace Proj_OnTheFly_BD
                 }
             } while (opc != 0);
         }
+        static void TelaInicialAeronaves()
+        {
+
+        }
         #endregion
         static void Main(string[] args)
         {
             TelaInicial();
+            //OBS ___ Quando os RESTRITOS e BLOQUEADOS estiverem prontos
+            //Precisa TEstar se funciona a validação de entrada CPF Login e CNPJ Login
         }
     }
 }
