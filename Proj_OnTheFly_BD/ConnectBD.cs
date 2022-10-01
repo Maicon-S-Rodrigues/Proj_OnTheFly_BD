@@ -89,7 +89,7 @@ namespace Proj_OnTheFly_BD
             }
             return acesso;
         }
-        public void SqlMostrarUmPassageiroAtivo(String sql)
+        public void SqlMostrarUmPassageiroAtivo(String sql) // ok 
         {
             try
             {
@@ -117,6 +117,42 @@ namespace Proj_OnTheFly_BD
                         Console.WriteLine(" Cadastrado des de {0}", reader.GetDateTime(5).ToShortDateString());
                         /*data_ultima_compra*/
                         Console.WriteLine(" Última compra feita em {0}", reader.GetDateTime(6));
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void SqlMostrarUmaCompanhiaAtiva(String sql)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(sql, connection);
+
+                SqlDataReader reader = null;
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        /*cnpj*/
+                        Console.WriteLine(" CNPJ: {0}", reader.GetString(0));
+                        /*razaoSocial*/
+                        Console.WriteLine(" Razão Social: {0}", reader.GetString(1));
+                        /*dataAbertura*/
+                        Console.WriteLine(" Existente des de: {0}", reader.GetDateTime(2).ToShortDateString());
+                        /*dataCadastro*/
+                        Console.WriteLine(" Cadastro Realizado em: {0}", reader.GetDateTime(3));
+                        /*ultimoVoo*/
+                        Console.WriteLine(" Último Voo Realizado em: {0}", reader.GetDateTime(4));
+                        /*situacao*/
+                        Console.WriteLine(" Situação do Cadastro: {0}", reader.GetString(5));
                     }
                 }
 
