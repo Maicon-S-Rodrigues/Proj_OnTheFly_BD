@@ -79,36 +79,6 @@ namespace Proj_OnTheFly_BD
                 return false;
             }
         }
-        public bool SqlVerificaCompanhiaAtiva(string command)
-        {
-            try
-            {
-                SqlCommand cmd = new SqlCommand(command, connection);
-                connection.Open();
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        connection.Close();
-                        return true;
-                    }
-                    else
-                    {
-                        connection.Close();
-                        return false;
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-                connection.Close();
-                Utility utility = new Utility();
-                utility.Pausa();
-                return false;
-            }
-        }
 
         public bool SqlLoginPassageiro(String sql) // pesquisa se o cpf existe, se existir retorna true
         {
@@ -253,14 +223,74 @@ namespace Proj_OnTheFly_BD
             }
         }
 
-        public int SqlPegarACapacidaeDaAeronave(string inscricaoAeronave)
+        public bool SqlVerificaCompanhiaAtiva(String sql)
         {
-            string sql = "SELECT Capacidade FROM Aeronave WHERE Inscricao = '" + inscricaoAeronave + "';";
             try
             {
-                int capacidade;
                 SqlCommand cmd = new SqlCommand(sql, connection);
                 connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        connection.Close();
+                        return true;
+                    }
+                    else
+                    {
+                        connection.Close();
+                        return false;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                return false;
+            }
+        }
+        public bool SqlVerificaAeronaveAtiva(String sql)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        connection.Close();
+                        return true;
+                    }
+                    else
+                    {
+                        connection.Close();
+                        return false;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                return false;
+            }
+        }
+        public int SqlPegarCapacidadeAeronave(string inscricao) // pega a capacidade da aeronave para determinar quantas passagens seram geradas
+        {
+            string sql = "SELECT Capacidade FROM Aeronave WHERE INSCRICAO = '" + inscricao + "';";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+                int capacidade = 0;
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -270,7 +300,7 @@ namespace Proj_OnTheFly_BD
                         return capacidade;
                     }
                 }
-                return 0;
+                return capacidade;
             }
             catch (SqlException ex)
             {
@@ -282,9 +312,9 @@ namespace Proj_OnTheFly_BD
             }
         }
 
-        
 
-        
+
+
 
     }
 }

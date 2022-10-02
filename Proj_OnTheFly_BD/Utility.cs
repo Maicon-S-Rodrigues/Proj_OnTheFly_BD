@@ -86,10 +86,10 @@ namespace Proj_OnTheFly_BD
             try
             {
                 bool ok = false;
-                string idVoo = "";
+
                 do
                 {
-                    idVoo = "V" + new Random().Next(1000, 9999);
+                    string idVoo = "V" + new Random().Next(1000, 9999);
                     bool vooExiste = connect.SqlVerificarDados(idVoo, "ID_VOO", "Voo");
 
                     if (vooExiste == false)
@@ -106,7 +106,7 @@ namespace Proj_OnTheFly_BD
             catch (Exception e)
             {
                 Console.Clear();
-                Console.WriteLine("Erro, não foi possível gerar um ID para o Voo!\n" + e.Message);
+                Console.WriteLine("Erro, não foi possível gerar o ID de Voo!\n" + e.Message);
                 Pausa();
                 throw;
             }
@@ -1187,8 +1187,8 @@ namespace Proj_OnTheFly_BD
 
                             if (encontrado == true)
                             {
-                                //comando = "select Situacao from Aeronave where Inscricao = '" + idaeronave + "' and Situacao = 'Ativa';";
-                                encontrado = connect.SqlVerificarDados(idaeronave, "Situacao = 'ATIVO' AND INSCRICAO ", "Aeronave");
+                                string sql = "SELECT Situacao FROM Aeronave WHERE Inscricao = '" + idaeronave + "' and Situacao = 'ATIVO';";
+                                encontrado = connect.SqlVerificaAeronaveAtiva(sql);
 
                                 if (encontrado == true)
                                 {
@@ -1274,7 +1274,7 @@ namespace Proj_OnTheFly_BD
                             float valor = float.Parse(Console.ReadLine());
                             if (valor > 0 && valor < 9999999.99)
                             {
-                                return valor.ToString("N2").Replace(',', '.');
+                                return valor.ToString().Replace(',', '.');
                             }
                             else
                             {
