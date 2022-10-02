@@ -223,6 +223,42 @@ namespace Proj_OnTheFly_BD
             }
         }
 
+        public void SqlMostrarVoosDeUmaCompanhia(String sql) // ok 
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(sql, connection);
+
+                SqlDataReader reader = null;
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        /*RazaoSocial*/
+                        Console.WriteLine(" Empresa: {0}", reader.GetString(0));
+                        /*ID_VOO*/
+                        Console.WriteLine(" Voo: {0}", reader.GetString(1));
+                        /*SituacaoVoo*/
+                        Console.WriteLine(" {0}", reader.GetString(2));
+                        /*DataPrevistaParaoVoo*/
+                        Console.WriteLine(" Data Prevista: {0}", reader.GetDateTime(3));
+                        /*AssentosOcupados*/
+                        Console.WriteLine(" Quantidade de Assentos ocupados: {0}", reader.GetInt32(4));
+                        /*INSCRICAO*/
+                        Console.WriteLine("__________________________________________________________________________________________");
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
         public bool SqlVerificaCompanhiaAtiva(String sql)
         {
             try

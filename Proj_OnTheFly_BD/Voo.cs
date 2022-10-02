@@ -36,7 +36,6 @@ namespace Proj_OnTheFly_BD
         {
             Console.Clear();
             int capacidade;
-            float valor;
             bool permissaoVoo = connection.SqlVerificaCompanhiaAtiva($"SELECT Situacao FROM CompanhiaAerea WHERE Situacao = 'ATIVO' AND CNPJ = '{cnpjAtivo}'"); // verifica se a companhia esta ativa
 
             if (permissaoVoo == true)
@@ -46,7 +45,7 @@ namespace Proj_OnTheFly_BD
                 if (inscricao == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
 
                 bool aeronaveAtiva = connection.SqlVerificaAeronaveAtiva($"SELECT Situacao FROM Aeronave WHERE Situacao = 'ATIVO' AND INSCRICAO = '{inscricao}'"); // verifica se a aeronave esta ativa
-                
+
                 if (aeronaveAtiva == false)
                 {
                     Console.WriteLine("\nNão é possível cadastrar um novo Voo para essa Aeronave pois ela consta como 'INATIVA' no Sistema.");
@@ -61,9 +60,8 @@ namespace Proj_OnTheFly_BD
                 if (auxData == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
                 this.DataVoo = DateTime.Parse(auxData);
 
-                string auxValor = utility.ValidarEntrada("valorpassagem");
-                if (auxValor == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
-                valor = float.Parse(auxValor);
+                string valor = utility.ValidarEntrada("valorpassagem");
+                if (valor == null) comp.OpcoesCompanhiaAerea(cnpjAtivo);
 
                 bool gerou = false;
                 do
@@ -115,40 +113,63 @@ namespace Proj_OnTheFly_BD
         }
         public void CancelarVoo(string cnpjAtivo)
         {
-            //do
-            //{
-            //    Console.Clear();
-            //    Console.WriteLine("\n----------------------------------------------------------------------------------------------");
-            //    Console.WriteLine("\n1 - Escolher o Voo Desejado: ");
-            //    Console.WriteLine("0 - Voltar");
-            //    opc = int.Parse(utility.ValidarEntrada("menu"));
+            do
+            {
+                string sql = $"SELECT CompanhiaAerea.Razao_Social, Voo.ID_VOO, Voo.Situacao, Voo.Data_Hora_Voo, Voo.Assentos_Ocupados, Aeronave.INSCRICAO " +
+                             $"FROM Aeronave " +
+                             $"RIGHT JOIN CompanhiaAerea " +
+                             $"ON(CompanhiaAerea.CNPJ = Aeronave.CNPJ) " +
+                             $"RIGHT JOIN Voo " +
+                             $"ON(Voo.INSCRICAO = Aeronave.INSCRICAO) " +
+                             $"WHERE CompanhiaAerea.CNPJ = '{cnpjAtivo}';";
+                int opc;
+
+                Console.Clear();
+                Console.WriteLine("__________________________________________________________________________________________");
+                connection.SqlMostrarVoosDeUmaCompanhia(sql);
+                Console.WriteLine("__________________________________________________________________________________________");
+                Console.WriteLine("\n1 - Escolher o Voo que deseja CANCELAR: ");
+                Console.WriteLine("0 - Voltar");
+                opc = int.Parse(utility.ValidarEntrada("menu"));
 
 
-            //    switch (opc)
-            //    {
-            //        case 0:
-            //            OpcoesCompanhiaAerea(compAtivo);
-            //            break;
-            //        case 1:
-            //            Console.Clear();
-            //            string idvoo = ValidarEntrada("idvoo");
-            //            if (idvoo == null) OpcoesCompanhiaAerea(compAtivo);
+                switch (opc)
+                {
+                    case 0:
+                        return;
+                    case 1:
+                        Console.Clear();
+                        bool flag = false;
+                        string idvoo = utility.ValidarEntrada("idvoo");
+                        if (idvoo == null) return;
 
-            //            foreach (var voo in listVoo)
-            //            {
-            //                if (voo.IDVoo == idvoo)
-            //                {
-            //                    voo.Situacao = 'C';
-            //                    Console.WriteLine("Voo CANCELADO!.");
-            //                    utility.Pausa();
-            //                    OpcoesCompanhiaAerea(compAtivo);
-            //                }
+                        Console.WriteLine("Você tem certeza de que deseja cancelar o Voo " + idvoo + " ?");
+                        Console.WriteLine("Escolha [- S -] para confirmar ou [- N -] para cancelar.");
+                        do
+                        {
+                            string confirmacao = Console.ReadLine().ToUpper();
 
-            //            }
+                            switch (confirmacao)
+                            {
+                                case "S":
+                                    string sqlUpdateVoo = $"UPDATE Voo SET Situacao = 'INATIVO' WHERE ID_VOO = '{idvoo}';";
+                                    connection.SqlUpdate(sqlUpdateVoo);
+                                    Console.WriteLine("Voo Cancelado!");
+                                    utility.Pausa();
+                                    flag = true;
+                                    break;
 
-            //            break;
-            //    }
-            //} while (true);
+                                case "N":
+                                    flag = true;
+                                    break;
+                                default:
+                                    Console.WriteLine("Escolha [- S -] para confirmar ou [- N -] para cancelar.");
+                                    break;
+                            }
+                        } while (flag == false);
+                        break;
+                }
+            } while (true);
         }
 
     }
