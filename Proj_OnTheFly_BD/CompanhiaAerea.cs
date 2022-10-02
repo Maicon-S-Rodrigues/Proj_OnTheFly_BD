@@ -94,44 +94,9 @@ namespace Proj_OnTheFly_BD
 
 
                     case 3:
-                        //foreach (var Voo in listVoo)
-                        //{
-                        //    if (Voo.Situacao == 'A')
-                        //    {
-                        //        Console.WriteLine("IDVoo: " + Voo.IDVoo + " Destino: " + Voo.Destino + " Data e Hora do Voo: " + Voo.DataVoo.ToString("dd/MM/yyyy HH:mm"));
-                        //    }
-                        //}
-                        //Console.WriteLine("\n----------------------------------------------------------------------------------------------");
-                        //Console.WriteLine("\n1 - Escolher o Voo Desejado: ");
-                        //Console.WriteLine("0 - Voltar");
-                        //opc = int.Parse(ValidarEntrada("menu"));
-                        //Console.Clear();
 
-                        //switch (opc)
-                        //{
-                        //    case 0:
-                        //        OpcoesCompanhiaAerea(compAtivo);
-                        //        break;
-                        //    case 1:
-                        //        Console.Clear();
-                        //        string idvoo = ValidarEntrada("idvoo");
-                        //        if (idvoo == null) OpcoesCompanhiaAerea(compAtivo);
-
-                        //        foreach (var voo in listVoo)
-                        //        {
-                        //            if (voo.IDVoo == idvoo)
-                        //            {
-                        //                voo.Situacao = 'C';
-                        //                Console.WriteLine("Voo CANCELADO!.");
-                        //                utility.Pausa();
-                        //                OpcoesCompanhiaAerea(compAtivo);
-                        //            }
-
-                        //        }
-
-                        //        break;
-                        //}
-
+                        voo.CancelarVoo(cnpjAtivo);
+                        
                         break;
 
 

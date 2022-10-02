@@ -314,6 +314,39 @@ namespace Proj_OnTheFly_BD
 
 
 
+        public void SqlMostrar(String sql) // TESTE MOSTRAR O PREÇO DAS PASSAGENS NO CONSOLE
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(sql, connection);
+
+                SqlDataReader reader = null;
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        /*cpf*/
+                        Console.WriteLine(" PASSAGEM: {0}", reader.GetString(0));
+                        /*nome*/
+                        Console.WriteLine(" VALOR R$: {0}", reader.GetFloat(1));
+                        /*data_nasc*/
+                        Console.WriteLine("----------------------------------");
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+
 
 
     }

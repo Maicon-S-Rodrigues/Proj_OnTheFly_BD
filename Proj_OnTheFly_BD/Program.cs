@@ -167,6 +167,12 @@ namespace Proj_OnTheFly_BD
         static void Main(string[] args)
         {
             TelaInicial();
+
+            //ConnectBD bd = new(); TESTE MOSTRAR PRECO DAS PASSAGENS NO CONSOLE
+            //string sql = "SELECT ID_PASSAGEM, Valor FROM Passagem;";
+            //bd.SqlMostrar(sql);
+
+
             //OBS ___ Quando os RESTRITOS e BLOQUEADOS estiverem prontos
             //Precisa TEstar se funciona a validação de entrada CPF Login e CNPJ Login
         }
