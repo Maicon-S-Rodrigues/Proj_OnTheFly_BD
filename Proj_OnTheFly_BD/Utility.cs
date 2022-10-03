@@ -1584,6 +1584,269 @@ namespace Proj_OnTheFly_BD
                 #endregion
 
 
+                case "cpfjarestrito": // ok
+
+                    #region CPFjaRestrito;
+
+                    do
+                    {
+                        retornar = false;
+                        qtdnumerosiguais = 0;
+                        long cpf;
+
+                        try
+                        {
+                            Console.Clear();
+                            Console.Write("Informe o CPF: ");
+
+                            cpf = long.Parse(Console.ReadLine());
+
+                            char[] letras = cpf.ToString().ToCharArray();
+
+                            //verifica se tem 11 caracteres:
+                            if (letras.Length == 11)
+                            {
+
+                                //Verifica se é um cpf válido calculando os 2 últimos digitos, segundo a receita federal:
+                                int soma = 0;
+                                int resto = 0;
+                                int digito1 = 0;
+                                int digito2 = 0;
+
+                                //Verifica se os números são iguais
+
+                                for (int i = 0; i < 9; i++)
+                                {
+                                    if (letras[i] == letras[i + 1])
+                                        qtdnumerosiguais = qtdnumerosiguais + 1;
+                                }
+
+                                //Se os 9 primeiros digitos forem todos iguais, invalida o cpf:
+                                if (qtdnumerosiguais != 9)
+                                {
+                                    //calcula o primeiro digito verificador do cpf:
+                                    for (int i = 1, j = 0; i < 10; i++, j++)
+                                        soma = soma + (int.Parse(letras[j].ToString()) * i);
+
+                                    resto = soma % 11;
+
+                                    if (resto >= 10)
+                                    {
+                                        digito1 = 0;
+
+                                    }
+                                    else
+                                    {
+                                        digito1 = resto;
+                                    }
+
+                                    //Verifica se o primeiro digito digitado é igual ao que era pra ser:
+                                    if (digito1 == int.Parse(letras[9].ToString()))
+                                    {
+                                        soma = 0; //seta o soma em 0 para o processo de soma do segundo digito do cpf:
+
+                                        //calcula o segundo digito verificador do cpf:
+                                        for (int i = 0, j = 0; i < 10; i++, j++)
+                                            soma = soma + (int.Parse(letras[j].ToString()) * i);
+
+                                        resto = soma % 11;
+
+                                        if (resto >= 10)
+                                        {
+                                            digito2 = 0;
+                                        }
+                                        else
+                                        {
+                                            digito2 = resto;
+                                        }
+                                        //Verifica se o segundo digito digitado é igual ao que era pra ser:
+                                        if (digito2 == int.Parse(letras[10].ToString()))
+                                        {
+                                            //Se digitos validados, procura no banco de dados se já existe o cpf cadastrado:
+
+                                            //Se achar no banco, não deixa prosseguir
+                                            encontrado = connect.SqlVerificarDados(cpf.ToString(), "CPF_RESTRITO", "Restritos");
+
+                                            if (encontrado == true)
+                                            {
+                                                //Se encontrar, invalida o cadastro
+                                                Console.WriteLine("CPF já esta Restrito!");
+                                                retornar = PausaMensagem();
+                                            }
+                                            else return cpf.ToString();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Esse não é um CPF válido!");
+                                            retornar = PausaMensagem();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Esse não é um CPF válido!");
+                                        retornar = PausaMensagem();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("CPF com números sequenciais iguais não é válido!");
+                                    retornar = PausaMensagem();
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Só aceita números válidos de 11 digitos");
+                                retornar = PausaMensagem();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("ERRO: Só aceita números válidos de 11 digitos");
+                            retornar = PausaMensagem();
+                        }
+                    } while (retornar == false);
+
+                    //Retorna nulo se o usuário quiser cancelar no meio do cadastro;
+                    return null;
+
+                #endregion;
+
+
+                case "cnpjjarestrito": // ok
+
+                    #region CNPJ;
+
+                    do
+                    {
+                        retornar = false; // só retorna se o usuário quiser
+                        qtdnumerosiguais = 0;
+                        long cnpj;
+
+                        try
+                        {
+                            Console.Clear();
+                            Console.Write("Informe o CNPJ: ");
+
+                            cnpj = long.Parse(Console.ReadLine());
+
+                            char[] letras = cnpj.ToString().ToCharArray();
+
+                            //verifica se tem 14 caracteres:
+                            if (letras.Length == 14)
+                            {
+                                //Qualquer valor que não seja um número invalida o cnpj:
+
+                                //Verifica se os números são iguais
+                                for (int i = 0; i < 12; i++)
+                                {
+                                    if (letras[i] == letras[i + 1])
+                                        qtdnumerosiguais = qtdnumerosiguais + 1;
+                                }
+
+                                //Se os 12 primeiros digitos forem todos iguais, invalida o cnpj:
+                                if (qtdnumerosiguais != 12)
+                                {
+                                    int soma = 0;
+                                    int resto = 0;
+                                    int digito1 = 0;
+                                    int digito2 = 0;
+
+                                    //calcula o primeiro digito verificador do cnpj:
+                                    for (int i = 6, j = 0; i < 10; i++, j++)
+                                        soma = soma + (int.Parse(letras[j].ToString()) * i);
+
+                                    for (int i = 2, j = 4; i < 10; i++, j++)
+                                        soma = soma + (int.Parse(letras[j].ToString()) * i);
+
+                                    resto = soma % 11;
+
+                                    if (resto >= 10)
+                                    {
+                                        digito1 = 0;
+
+                                    }
+                                    else
+                                    {
+                                        digito1 = resto;
+                                    }
+
+                                    //Verifica se o primeiro digito digitado é igual ao que era pra ser:
+                                    if (digito1 == int.Parse(letras[12].ToString()))
+                                    {
+                                        soma = 0; //seta o soma em 0 para o processo de soma do segundo digito do cnpj:
+
+                                        //calcula o segundo digito verificador do cpf:
+                                        for (int i = 5, j = 0; i < 10; i++, j++)
+                                            soma = soma + (int.Parse(letras[j].ToString()) * i);
+
+                                        for (int i = 2, j = 5; i < 10; i++, j++)
+                                            soma = soma + (int.Parse(letras[j].ToString()) * i);
+
+                                        resto = soma % 11;
+
+                                        if (resto >= 10)
+                                        {
+                                            digito2 = 0;
+
+                                        }
+                                        else
+                                        {
+                                            digito2 = resto;
+                                        }
+                                        //Verifica se o segundo digito digitado é igual ao que era pra ser:
+                                        if (digito2 == int.Parse(letras[13].ToString()))
+                                        {
+                                            //Se digitos validados, procura no banco de dados se já existe o cnpj cadastrado:
+
+
+                                            //Se achar, não deixa prosseguir
+                                            encontrado = connect.SqlVerificarDados(cnpj.ToString(), "CNPJ_RESTRITO", "Bloqueados");
+
+                                            if (encontrado == true)
+                                            {
+                                                //Se encontrar, invalida o cadastro
+                                                Console.WriteLine("CNPJ já cadastrado!");
+                                                retornar = PausaMensagem();
+                                            }
+                                            else return cnpj.ToString();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Esse não é um CNPJ válido!");
+                                            retornar = PausaMensagem();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Esse não é um CNPJ válido!");
+                                        retornar = PausaMensagem();
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("CNPJ com números sequenciais iguais não é válido!");
+                                    retornar = PausaMensagem();
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Só aceita números válidos de 14 digitos");
+                                retornar = PausaMensagem();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("ERRO: Só aceita números válidos de 14 digitos");
+                            retornar = PausaMensagem();
+                        }
+                    } while (retornar == false);
+
+                    //Retorna nulo se o usuário quiser cancelar no meio do cadastro;
+                    return null;
+
+                #endregion;
+
+
                 default:
                     return null;
             }

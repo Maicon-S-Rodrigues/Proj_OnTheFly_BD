@@ -48,6 +48,22 @@ namespace Proj_OnTheFly_BD
                 connection.Close();
             }
         }
+        public void SqlDelete(String sql) // ok
+        {
+            try
+            {
+                connection.Open();
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+            }
+        }
         public bool SqlVerificarDados(string dado, string campo, string tabela)
         {
             string sql = $"SELECT {campo} FROM {tabela} WHERE {campo} = '{dado}'";
@@ -319,6 +335,36 @@ namespace Proj_OnTheFly_BD
                 return false;
             }
         }
+        public bool SqlVerificaListaRestritos(String sql)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        connection.Close();
+                        return true;
+                    }
+                    else
+                    {
+                        connection.Close();
+                        return false;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                return false;
+            }
+        }
         public int SqlPegarCapacidadeAeronave(string inscricao) // pega a capacidade da aeronave para determinar quantas passagens seram geradas
         {
             string sql = "SELECT Capacidade FROM Aeronave WHERE INSCRICAO = '" + inscricao + "';";
@@ -345,6 +391,35 @@ namespace Proj_OnTheFly_BD
                 Utility utility = new Utility();
                 utility.Pausa();
                 throw;
+            }
+        }
+
+
+        public void SqlMostrarRestritos(String sql)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(sql, connection);
+
+                SqlDataReader reader = null;
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        /*cpf*/
+                        Console.WriteLine(" CPF RESTRITO: {0}", reader.GetString(0));
+                        Console.WriteLine("----------------------------------");
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
