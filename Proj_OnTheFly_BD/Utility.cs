@@ -1262,7 +1262,7 @@ namespace Proj_OnTheFly_BD
                 #endregion
 
 
-                case "valorpassagem": // -- talvez precise retirar a formatação N2 do valor -- // --
+                case "valorpassagem": // ok
 
                     #region ValorPassagem 
 
@@ -1294,7 +1294,7 @@ namespace Proj_OnTheFly_BD
                 #endregion
 
 
-                case "cpflogin": //ok -- Precisa testar -- // --
+                case "cpflogin": //ok 
 
                     #region CpflLogin
 
@@ -1313,8 +1313,7 @@ namespace Proj_OnTheFly_BD
                             if (encontrado == true)
                             {
                                 //Verifica se situação está Ativa
-                                //comando = "select Situacao from Passageiro where CPF = '" + cpf + "' and Situacao = 'Ativa';";
-                                encontrado = connect.SqlVerificarDados(cpf, "Situacao = 'ATIVO' AND CPF ", "Passageiro");
+                                encontrado = connect.SqlVerificaCompanhiaAtiva($"SELECT Situacao FROM Passageiro WHERE Situacao = 'ATIVO' AND CPF = '{cpf}'");
 
                                 if (encontrado == true)
                                 {
@@ -1325,7 +1324,7 @@ namespace Proj_OnTheFly_BD
                                     if (DateTime.Compare(datanascimento, System.DateTime.Now.AddYears(-18)) <= 0)
                                     {
                                         //Verifica se está restrito
-                                        encontrado = connect.SqlVerificarDados(cpf, "CPF", "Restritos");
+                                        encontrado = connect.SqlVerificarDados(cpf, "CPF_RESTRITO", "Restritos");
 
                                         if (encontrado == false)
                                         {
@@ -1389,12 +1388,12 @@ namespace Proj_OnTheFly_BD
                             if (encontrado == true)
                             {
                                 //Verifica se situação está Ativa
-                                encontrado = connect.SqlVerificarDados(cnpj, "Situacao = 'ATIVO' AND CPF ", "CompanhiaAerea");
+                                encontrado = connect.SqlVerificaCompanhiaAtiva($"SELECT Situacao FROM CompanhiaAerea WHERE Situacao = 'ATIVO' AND CNPJ = '{cnpj}'");
 
                                 if (encontrado == true)
                                 {
                                     //Verifica se está bloqueada
-                                    encontrado = connect.SqlVerificarDados(cnpj, "CNPJ", "BLoqueados");
+                                    encontrado = connect.SqlVerificarDados(cnpj, "CNPJ_RESTRITO", "BLoqueados");
 
                                     if (encontrado == false)
                                     {
@@ -1478,6 +1477,19 @@ namespace Proj_OnTheFly_BD
                     do
                     {
                         retornar = false;
+                        string sql = $"SELECT CompanhiaAerea.Razao_Social, Voo.ID_VOO, Voo.Situacao, Voo.Data_Hora_Voo, Voo.Assentos_Ocupados, Aeronave.INSCRICAO " +
+                         $"FROM Aeronave " +
+                         $"RIGHT JOIN CompanhiaAerea " +
+                         $"ON(CompanhiaAerea.CNPJ = Aeronave.CNPJ) " +
+                         $"RIGHT JOIN Voo " +
+                         $"ON(Voo.INSCRICAO = Aeronave.INSCRICAO) " +
+                         $"WHERE Voo.Situacao = 'ATIVO'; ";
+
+                        Console.Clear();
+                        Console.WriteLine("VOOS DISPONÍVEIS:");
+                        Console.WriteLine("__________________________________________________________________________________________");
+                        connect.SqlMostrarVoosDisponiveis(sql);
+                        Console.WriteLine("__________________________________________________________________________________________");
 
                         Console.Write("Informe o ID do Voo para prosseguir: ");
                         try
@@ -1575,7 +1587,7 @@ namespace Proj_OnTheFly_BD
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("CPF Inválido!");
+                            Console.WriteLine("CNPJ Inválido!");
                             retornar = PausaMensagem();
                         }
                     } while (retornar == false);

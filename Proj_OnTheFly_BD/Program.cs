@@ -7,6 +7,7 @@ namespace Proj_OnTheFly_BD
     {
         static Utility utility = new Utility();
         static ConnectBD connect = new ConnectBD();
+        static Venda vendas = new Venda();
         #region TELAS
         static void TelaInicial()
         {
@@ -46,7 +47,7 @@ namespace Proj_OnTheFly_BD
                             break;
 
                         case 3:
-                            //TelaVendas();
+                            vendas.TelaVendas();
                             break;
 
                         case 4:
@@ -390,6 +391,7 @@ namespace Proj_OnTheFly_BD
 
             } while (true);
         }
+       
         #endregion
         static void Main(string[] args)
         {

@@ -15,7 +15,7 @@ namespace Proj_OnTheFly_BD
 
         public ConnectBD() { }
 
-        public void SqlInsert(String sql) // ok
+        public void SqlInsert(String sql) 
         {
             try
             {
@@ -32,7 +32,7 @@ namespace Proj_OnTheFly_BD
                 connection.Close();
             }
         }
-        public void SqlUpdate(String sql) // ok
+        public void SqlUpdate(String sql) 
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Proj_OnTheFly_BD
                 connection.Close();
             }
         }
-        public void SqlDelete(String sql) // ok
+        public void SqlDelete(String sql) 
         {
             try
             {
@@ -163,7 +163,7 @@ namespace Proj_OnTheFly_BD
                 throw;
             }
         }
-        public void SqlMostrarUmPassageiroAtivo(String sql) // ok 
+        public void SqlMostrarUmPassageiroAtivo(String sql) 
         {
             try
             {
@@ -202,7 +202,7 @@ namespace Proj_OnTheFly_BD
             }
         }
 
-        public void SqlMostrarUmaCompanhiaAtiva(String sql) // ok 
+        public void SqlMostrarUmaCompanhiaAtiva(String sql)  
         {
             try
             {
@@ -239,7 +239,7 @@ namespace Proj_OnTheFly_BD
             }
         }
 
-        public void SqlMostrarVoosDeUmaCompanhia(String sql) // ok 
+        public void SqlMostrarVoosDeUmaCompanhia(String sql)  
         {
             try
             {
@@ -393,8 +393,133 @@ namespace Proj_OnTheFly_BD
                 throw;
             }
         }
+        public string SqlPegarInscricaoAeronave(string idVoo) // envia o id do voo e recebe a inscricao da aeronave envolvida nele
+        {
+            string sql = "SELECT INSCRICAO FROM Voo WHERE ID_VOO = '" + idVoo + "';";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, connection);
+                connection.Open();
+                string inscricao = "";
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        inscricao = reader.GetString(0);
+                        connection.Close();
+                        return inscricao;
+                    }
+                }
+                return inscricao;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                throw;
+            }
+        }
+        public int SqlPegarPassagensLivres(string idVoo)
+        {
+            
+            try
+            {
+                string sql = $"SELECT COUNT (Situacao) FROM Passagem WHERE ID_VOO = '{idVoo}';";
+                int passLivres = 0;
 
 
+                using (SqlCommand cmd = new SqlCommand(sql, connection))
+                {
+                    connection.Open();
+
+                    passLivres = (int)cmd.ExecuteScalar();
+                    connection.Close();
+                    return passLivres;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                connection.Close();
+                Utility utility = new Utility();
+                utility.Pausa();
+                throw;
+            }
+        }
+        public void SqlMostrarVoosDisponiveis(String sql)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(sql, connection);
+
+                SqlDataReader reader = null;
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        /*RazaoSocial*/
+                        Console.WriteLine(" Empresa: {0}", reader.GetString(0));
+                        /*ID_VOO*/
+                        Console.WriteLine(" Voo: {0}", reader.GetString(1));
+                        /*SituacaoVoo*/
+                        Console.WriteLine(" {0}", reader.GetString(2));
+                        /*DataPrevistaParaoVoo*/
+                        Console.WriteLine(" Data Prevista: {0}", reader.GetDateTime(3));
+                        /*AssentosOcupados*/
+                        Console.WriteLine(" Quantidade de Assentos ocupados: {0}", reader.GetInt32(4));
+                        /*INSCRICAO*/
+                        Console.WriteLine("__________________________________________________________________________________________");
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void SqlMostrarDetahesVoo(String sql)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(sql, connection);
+
+                SqlDataReader reader = null;
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        /*RazaoSocial*/
+                        Console.WriteLine(" Empresa: {0}", reader.GetString(0));
+                        /*ID_VOO*/
+                        Console.WriteLine(" Voo: {0}", reader.GetString(1));
+                        /*SituacaoVoo*/
+                        Console.WriteLine(" {0}", reader.GetString(2));
+                        /*DataPrevistaParaoVoo*/
+                        Console.WriteLine(" Data Prevista: {0}", reader.GetDateTime(3));
+                        /*AssentosOcupados*/
+                        Console.WriteLine(" Quantidade de Assentos ocupados: {0}", reader.GetInt32(4));
+                        /*INSCRICAO*/
+                        Console.WriteLine("__________________________________________________________________________________________");
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
         public void SqlMostrarRestritos(String sql)
         {
             try
@@ -422,42 +547,6 @@ namespace Proj_OnTheFly_BD
                 Console.WriteLine(ex.Message);
             }
         }
-
-
-
-        public void SqlMostrar(String sql) // TESTE MOSTRAR O PREÇO DAS PASSAGENS NO CONSOLE
-        {
-            try
-            {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand(sql, connection);
-
-                SqlDataReader reader = null;
-
-                using (reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        /*cpf*/
-                        Console.WriteLine(" PASSAGEM: {0}", reader.GetString(0));
-                        /*nome*/
-                        Console.WriteLine(" VALOR R$: {0}", reader.GetFloat(1));
-                        /*data_nasc*/
-                        Console.WriteLine("----------------------------------");
-                    }
-                }
-
-                connection.Close();
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-
-
 
 
     }
