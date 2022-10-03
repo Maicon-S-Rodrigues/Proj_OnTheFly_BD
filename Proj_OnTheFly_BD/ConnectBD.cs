@@ -14,7 +14,7 @@ namespace Proj_OnTheFly_BD
         private static SqlConnection connection = new SqlConnection(PathWay);
 
         public ConnectBD() { }
-
+         
         public void SqlInsert(String sql) 
         {
             try
